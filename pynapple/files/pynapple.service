@@ -1,0 +1,12 @@
+[Unit]
+Description=Gunicorn instance to serve myapp
+After=network.target
+
+[Service]
+User=ec2-user
+Group=nginx
+WorkingDirectory=/home/ec2-user/pynapple
+ExecStart=gunicorn --workers 2 --bind 0.0.0.0:8000 app:app
+
+[Install]
+WantedBy=multi-user.target
