@@ -76,6 +76,7 @@ module "asg" {
     sudo su ec2-user
     cd pynapple
     ./scripts/install_and_run.sh
+    sudo systemctl start amazon-ssm-agent
   EOF
   )
 
