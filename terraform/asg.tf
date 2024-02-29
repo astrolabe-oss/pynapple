@@ -69,7 +69,9 @@ module "asg" {
   user_data = base64encode(<<-EOF
     #!/bin/bash
     cd /home/ec2-user
-    aws s3 cp s3://guruai-pynapple-deploy/pynapple_latest.tar.gz .
+    mkdir pynapple
+    cd pynapple
+    aws s3 cp s3://guruai-sandbox1-pynapple-deploy/pynapple_latest.tar.gz .
     tar -xzf pynapple_latest.tar.gz
     chown -R ec2-user:ec2-user pynapple
     chmod +x pynapple/scripts/install_and_run.sh
