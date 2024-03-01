@@ -38,7 +38,7 @@ def list_pynapples():
 
 @app.route('/pynapples', methods=['POST'])
 def add_pynapple():
-    if request.remote_addr != '127.0.0.1':
+    if '127.0.0.1' != request.headers.get('X-Forwarded-For', '').split(',')[0]:
         abort(403)
     data = request.get_json()
     ripeness = data.get('ripeness')
