@@ -49,7 +49,8 @@ module "asg" {
   }
   iam_role_policies = {
     AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
-    PynappleDeployBucket = aws_iam_policy.pynapple_deploy_bucket_read.arn
+    PynappleDeployBucket = aws_iam_policy.pynapple_deploy_bucket_read.arn,
+    PynappleAppDbSecret = aws_iam_policy.pynapple_access_app_db_secret.arn
   }
 
   network_interfaces = [
@@ -59,6 +60,7 @@ module "asg" {
       device_index                = 0
       security_groups             = [
         module.vpc.default_security_group_id,
+        aws_security_group.pynapple_instances_default.id,
         aws_security_group.allow_ssh.id,
         aws_security_group.pynapple_alb_to_asg.id
       ]
@@ -68,6 +70,8 @@ module "asg" {
 
   user_data = base64encode(<<-EOF
     #!/bin/bash
+
+    ### GET DEPLOY FILES ###
     cd /home/ec2-user
     mkdir pynapple
     cd pynapple
@@ -75,9 +79,17 @@ module "asg" {
     tar -xzf pynapple_latest.tar.gz
     chown -R ec2-user:ec2-user pynapple
     chmod +x pynapple/scripts/install_and_run.sh
+
+    ### CONFIGURE ###
     sudo su ec2-user
+    SECRET_VALUE=$(aws secretsmanager get-secret-value --secret-id sandbox1/pynapple/app_db_pw --query SecretString --output text)
+    echo "PYNAPPLE_DATABASE_URI=postgresql://pynapple:$SECRET_VALUE@sandbox1-pynapple-db.chqoygiays09.us-east-1.rds.amazonaws.com:5432/pynapple" >> /home/ec2-user/pynapple.env
+
+    ### INSTALL AND RUN ###
     cd pynapple
     ./scripts/install_and_run.sh
+
+    ### SETUP SSM SSH ###
     sudo systemctl start amazon-ssm-agent
   EOF
   )
