@@ -23,3 +23,22 @@ resource "aws_security_group" "pynapple_alb_to_asg" {
     security_groups = [module.alb.security_group_id]
   }
 }
+
+resource "aws_security_group" "pynapple_instances_default" {
+  name        = "${local.env_app_name}$ default"
+  description = "Empty default security group for ${local.env_app_name} ec2 instances for referencing elsewhere"
+  vpc_id      = module.vpc.vpc_id
+}
+
+resource "aws_security_group" "pynapple_rds_access" {
+  name        = "rds-sg"
+  description = "Allow inbound traffic from EC2 instances to RDS"
+  vpc_id      = module.vpc.vpc_id
+
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    security_groups = [aws_security_group.pynapple_instances_default.id]
+  }
+}
