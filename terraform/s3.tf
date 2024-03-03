@@ -3,9 +3,9 @@
 ################
 resource "aws_s3_bucket" "pynapple_nlb_logs" {
   bucket = "${"guruai-"}${local.env_app_name}${"-nlb-logs"}"
-#  lifecycle {
-#    prevent_destroy = "true"
-#  }
+  lifecycle {
+    prevent_destroy = "true"
+  }
 }
 
 data "aws_elb_service_account" "main" {}
@@ -45,9 +45,9 @@ POLICY
 ##############################
 resource "aws_s3_bucket" "pynapple_deploy" {
   bucket = "guruai-${local.env_app_name}-deploy"
-#  lifecycle {
-#    prevent_destroy = "true"
-#  }
+  lifecycle {
+    prevent_destroy = "true"
+  }
 }
 
 resource "aws_s3_bucket_versioning" "versioning_example" {
