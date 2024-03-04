@@ -11,9 +11,9 @@ resource "aws_iam_policy" "pynapple_deploy_bucket_read" {
         Resource = "arn:aws:s3:::guruai-${local.env_app_name}-deploy/*"
       },
       {
-        "Effect": "Allow",
-        "Action": "s3:ListBucket",
-        "Resource": "arn:aws:s3:::guruai-${local.env_app_name}-deploy"
+        "Effect" : "Allow",
+        "Action" : "s3:ListBucket",
+        "Resource" : "arn:aws:s3:::guruai-${local.env_app_name}-deploy"
       },
       {
         Effect   = "Allow",

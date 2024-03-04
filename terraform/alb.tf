@@ -36,18 +36,18 @@ module "alb" {
 
   target_groups = {
     asg = {
-      name_prefix        = "http"
-      backend_protocol   = "HTTP"
-      backend_port       = 80
-      target_type        = "instance"
-      create_attachment  = "false"
+      name_prefix       = "http"
+      backend_protocol  = "HTTP"
+      backend_port      = 80
+      target_type       = "instance"
+      create_attachment = "false"
     },
   }
 
   listeners = [
     {
-      port               = 80
-      protocol           = "HTTP"
+      port     = 80
+      protocol = "HTTP"
       forward = {
         target_group_key = "asg"
       }

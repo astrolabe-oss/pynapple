@@ -14,10 +14,10 @@ module "db" {
   port     = "5432"
 
   vpc_security_group_ids = [aws_security_group.pynapple_rds_access.id]
-  maintenance_window  = "Mon:00:00-Mon:03:00"
-  backup_window       = "03:00-06:00"
-  deletion_protection = true
-  publicly_accessible = false
+  maintenance_window     = "Mon:00:00-Mon:03:00"
+  backup_window          = "03:00-06:00"
+  deletion_protection    = true
+  publicly_accessible    = false
 
   # DB subnet group
   create_db_subnet_group = true
@@ -25,16 +25,16 @@ module "db" {
 
   create_db_parameter_group = false
   # Database Deletion Protection
-#  parameters = [
-#    {
-#      name  = "character_set_client"
-#      value = "utf8mb4"
-#    },
-#    {
-#      name  = "character_set_server"
-#      value = "utf8mb4"
-#    }
-#  ]
+  #  parameters = [
+  #    {
+  #      name  = "character_set_client"
+  #      value = "utf8mb4"
+  #    },
+  #    {
+  #      name  = "character_set_server"
+  #      value = "utf8mb4"
+  #    }
+  #  ]
 
   tags = local.common_tags
 }

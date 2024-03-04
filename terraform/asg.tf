@@ -1,5 +1,5 @@
 module "asg" {
-  source  = "terraform-aws-modules/autoscaling/aws"
+  source = "terraform-aws-modules/autoscaling/aws"
 
   # Autoscaling group
   name = local.env_app_name
@@ -36,7 +36,7 @@ module "asg" {
 
   image_id          = "ami-0440d3b780d96b29d"
   instance_type     = "t2.micro"
-  ebs_optimized     = false  # t2.micro does not allow ebs optimized
+  ebs_optimized     = false # t2.micro does not allow ebs optimized
   enable_monitoring = true
 
   # IAM role & instance profile
@@ -49,16 +49,16 @@ module "asg" {
   }
   iam_role_policies = {
     AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
-    PynappleDeployBucket = aws_iam_policy.pynapple_deploy_bucket_read.arn,
-    PynappleAppDbSecret = aws_iam_policy.pynapple_access_app_db_secret.arn
+    PynappleDeployBucket         = aws_iam_policy.pynapple_deploy_bucket_read.arn,
+    PynappleAppDbSecret          = aws_iam_policy.pynapple_access_app_db_secret.arn
   }
 
   network_interfaces = [
     {
-      delete_on_termination       = true
-      description                 = "eth0"
-      device_index                = 0
-      security_groups             = [
+      delete_on_termination = true
+      description           = "eth0"
+      device_index          = 0
+      security_groups = [
         module.vpc.default_security_group_id,
         aws_security_group.pynapple_instances_default.id,
         aws_security_group.allow_ssh.id,
