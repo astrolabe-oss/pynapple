@@ -36,9 +36,12 @@ resource "aws_security_group" "pynapple_rds_access" {
   vpc_id      = module.vpc.vpc_id
 
   ingress {
-    from_port       = 5432
-    to_port         = 5432
-    protocol        = "tcp"
-    security_groups = [aws_security_group.pynapple_instances_default.id]
+    from_port = 5432
+    to_port   = 5432
+    protocol  = "tcp"
+    security_groups = [
+      aws_security_group.pynapple_instances_default.id,
+      module.eks.node_security_group_id
+    ]
   }
 }
