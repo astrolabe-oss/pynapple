@@ -54,5 +54,6 @@ resource "kubernetes_service" "pynapple_lb" {
       target_port = 80
     }
     type = "LoadBalancer"
+    load_balancer_source_ranges = local.ip_addresses_devs
   }
 }
