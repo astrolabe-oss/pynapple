@@ -84,6 +84,7 @@ module "asg" {
     sudo su ec2-user
     SECRET_VALUE=$(aws secretsmanager get-secret-value --secret-id sandbox1/pynapple/app_db_pw --query SecretString --output text)
     echo "PYNAPPLE_DATABASE_URI=postgresql://pynapple:$SECRET_VALUE@sandbox1-pynapple-db.chqoygiays09.us-east-1.rds.amazonaws.com:5432/pynapple" >> /home/ec2-user/pynapple.env
+    echo "PYNAPPLE_REDIS_HOST=${module.cache.cluster_cache_nodes[0].address}" >> /home/ec2-user/pynapple.env
 
     ### INSTALL AND RUN ###
     cd pynapple

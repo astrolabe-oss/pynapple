@@ -38,6 +38,10 @@ resource "kubernetes_deployment" "pynapple_app" {
             name  = "FLASK_ENV"
             value = "development"
           }
+          env {
+            name  = "PYNAPPLE_REDIS_HOST"
+            value = module.cache.cluster_cache_nodes[0].address
+          }
         }
       }
     }
