@@ -4,6 +4,7 @@ import os
 class Config:
     SQLALCHEMY_DATABASE_URI = os.environ.get('PYNAPPLE_DATABASE_URI', 'sqlite:///:memory:')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    REDIS_HOST = os.environ.get('PYNAPPLE_REDIS_HOST', 'localhost')
 
 
 class DevelopmentConfig(Config):
