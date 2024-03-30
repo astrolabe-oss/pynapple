@@ -1,22 +1,23 @@
 import json
+
 from pynapple.models import Pynapple
 
 
 class PynappleService:
-    def __init__(self, db, redis):
+    def __init__(self, db, cache_client):
         self.db = db
-        self.redis = redis
+        self.cache_client = cache_client
 
     def get_pynapples(self):
         # Check cache first
-        cached_pynapples = self.redis.get('pynapples')
+        cached_pynapples = self.cache_client.get('pynapples')
         if cached_pynapples:
             return json.loads(cached_pynapples), 'cache'
 
         # Fall back to database if not in cache
         pynapples = Pynapple.query.all()
         pynapples_list = [pynapple.to_dict() for pynapple in pynapples]
-        self.redis.set('pynapples', json.dumps(pynapples_list), ex=60)  # Refresh cache
+        self.cache_client.set('pynapples', json.dumps(pynapples_list), timeout=60)  # Refresh cache
         return pynapples_list, 'db'
 
     def add_pynapple(self, ripeness, selfie):
@@ -30,5 +31,5 @@ class PynappleService:
         return Pynapple.query.get_or_404(id).to_dict()
 
     def invalidate_cache(self):
-        self.redis.delete('pynapples')
+        self.cache_client.delete('pynapples')
 

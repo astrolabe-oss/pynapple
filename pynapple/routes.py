@@ -1,10 +1,11 @@
 from flask import jsonify, request, abort
 from pynapple.flask_app import app
+from pynapple.cache import cache_client
 from pynapple.services import PynappleService
-from pynapple.models import db, redis
+from pynapple.models import db
 
 
-pynapple_service = PynappleService(db, redis)
+pynapple_service = PynappleService(db, cache_client)
 
 
 @app.route('/')

@@ -1,11 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
-from redis import Redis
-
-from pynapple.config import DevelopmentConfig
 from pynapple.flask_app import app
 
 db = SQLAlchemy(app)
-redis = Redis(host=DevelopmentConfig.REDIS_HOST)
 
 
 class Pynapple(db.Model):

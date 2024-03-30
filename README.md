@@ -13,17 +13,13 @@ To deploy pynapple to s3, run the following script:
 The script will tarball up the relevant pynapple files, and upload it to the configured S3 bucket.  On next launch of pynapple ec2 machines they will pick up the latest tarball
 
 ### Local Database
+
+### Run Local PostgreSQL and Redis
 ```shell
-brew install postgresql
-brew services start postgresql
-psql postgres
-CREATE DATABASE pynapple;
-CREATE USER pynapple WITH PASSWORD 'ripe';
-GRANT ALL PRIVILEGES ON DATABASE pynapple TO pynapple;
+./run_local_pg.sh
 ```
 
-### Run Local
+### Run Local MySQL and Memcached
 ```shell
-export PYNAPPLE_DATABASE_URI=postgresql://pynapple:ripe@localhost:5432/pynapple
-PYTHONPATH=. FLASK_APP=pynapple/run.py flask run
+./run_local_mysql.sh
 ```
