@@ -3,6 +3,11 @@ output "load_balancer_dns_name" {
   value       = module.alb.dns_name
 }
 
+output "load_balancer_zone_id" {
+  description = "The DNS Zone Id of the ALB"
+  value       = module.alb.zone_id
+}
+
 output "ec2_deploy_bucket" {
   description = "S3 Bucket for deploying application to EC2"
   value       = aws_s3_bucket.deploy.bucket
