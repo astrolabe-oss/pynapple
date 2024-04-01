@@ -17,3 +17,8 @@ output "elasticache_redis_host" {
   description = "Connection Endpoint for the ElastiCache Redis Instance"
   value       = module.cache_redis.cluster_cache_nodes[0].address
 }
+
+output "ecr_repo_arn" {
+  description = "ECR Repository"
+  value       = aws_ecr_repository.this.repository_url
+}

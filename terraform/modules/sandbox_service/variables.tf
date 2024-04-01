@@ -55,6 +55,10 @@ variable "security_group_ids" {
   type        = list(string)
 }
 
+variable "eks_node_security_group_id" {
+  description = "EKS Node Security Group Id - for allowing traffic to RDS"
+  type        = string
+}
 # components
 variable "ec2_user_data" {
   description = "User Data script (Do NOT pre base64encode it!)"
@@ -65,6 +69,22 @@ variable "ec2_user_data" {
     sudo systemctl start amazon-ssm-agent
   EOF
 }
+
+variable "container_env_vars" {
+  description = "Environment variables for the container"
+  type = list(object({
+    name      = string
+    value     = optional(string)
+    valueFrom = optional(object({
+      secret_key_ref = optional(object({
+        name = string
+        key  = string
+      }))
+    }))
+  }))
+  default = []
+}
+
 
 variable "create_redis" {
   description = "Whether to create the Redis ElastiCache"

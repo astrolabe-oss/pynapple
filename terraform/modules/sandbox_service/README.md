@@ -1,7 +1,7 @@
 ## Usage
 ### EC2
 * apply it without EC2 User Data
-* ```
+* ```sh
   aws secretsmanager get-secret-value --secret-id sandbox1/pynapple/app_db_pw --query SecretString --output text
   psql -h sandbox1-pynapple1-db.chqoygiays09.us-east-1.rds.amazonaws.com -U dbadmin -d postgres
   CREATE USER pynapple WITH PASSWORD 'PW';
@@ -10,6 +10,10 @@
 * get the cache host and db host:port, manually update user data - apply again
 * build and push application tarball to s3 bucket
 * update manually in Route53 the pretty A records pointing to the load balancer
+### EKS
+* apply it without k8s deployment
+* build & deploy to ecr
+* deploy k8s (script also creates secrets)
 
 
 # Requirements

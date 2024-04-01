@@ -27,8 +27,8 @@ resource "aws_security_group" "rds_access" {
     to_port   = 5432
     protocol  = "tcp"
     security_groups = [
-      aws_security_group.instances_default.id
-      #,module.eks.node_security_group_id
+      aws_security_group.instances_default.id,
+      var.eks_node_security_group_id
     ]
   }
 }

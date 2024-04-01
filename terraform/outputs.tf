@@ -15,5 +15,9 @@ output "pynapple1_rds_postgres_host" {
 }
 
 output "pynapple1_elasticache_redis_host" {
-  value       = module.pynapple1.elasticache_redis_host
+  value = module.pynapple1.elasticache_redis_host
+}
+
+output "pynapple1_ecr_repo_url" {
+  value = module.pynapple1.ecr_repo_arn
 }
