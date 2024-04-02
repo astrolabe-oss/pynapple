@@ -60,16 +60,6 @@ variable "eks_node_security_group_id" {
   type        = string
 }
 # components
-variable "ec2_user_data" {
-  description = "User Data script (Do NOT pre base64encode it!)"
-  type        = string
-  default     = <<-EOF
-    #!/bin/bash
-    ### SETUP SSM SSH ###
-    sudo systemctl start amazon-ssm-agent
-  EOF
-}
-
 variable "container_env_vars" {
   description = "Environment variables for the container"
   type = list(object({
@@ -85,19 +75,17 @@ variable "container_env_vars" {
   default = []
 }
 
+variable "cache_engine" {
+  description = "Engine of the cache to create (redis or memcached)"
+  type        = string
+}
 
-variable "create_redis" {
-  description = "Whether to create the Redis ElastiCache"
-  type        = bool
-  default     = false
+variable "database_engine" {
+  description = "Engine of the database to create (postgres or mysql)"
+  type        = string
 }
 
 variable "app_db_name" {
   description = "Database name for the application to use (schema, etc)"
-  type        = string
-}
-
-variable "app_db_pw_secret_arn" {
-  description = "AWS Secrets Manager ARN for the application db secret"
   type        = string
 }

@@ -26,9 +26,14 @@ resource "aws_security_group" "rds_access" {
     from_port = 5432
     to_port   = 5432
     protocol  = "tcp"
-    security_groups = [
-      aws_security_group.instances_default.id,
-      var.eks_node_security_group_id
-    ]
+    security_groups = [aws_security_group.instances_default.id]
   }
+
+  ingress {
+    from_port = 5432
+    to_port   = 5432
+    protocol  = "tcp"
+    cidr_blocks = var.ip_addresses_devs
+  }
+
 }

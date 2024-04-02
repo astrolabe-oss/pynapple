@@ -1,12 +1,25 @@
-module "cache_redis" {
+locals {
+  cache_engine_versions = {
+    redis     = "7.1"
+    memcached = "1.6.22"
+  }
+  cache_engine_param_groups = {
+    redis     = "redis7"
+    memcached = "memcached1.6"
+  }
+}
+
+
+module "cache" {
   source = "terraform-aws-modules/elasticache/aws"
 
   cluster_id               = "${local.env_app_name}-cache"
-  create_cluster           = var.create_redis
+  create_cluster           = true
   create_replication_group = false
   num_cache_nodes          = 1
 
-  engine_version = "7.1"
+  engine         = var.cache_engine
+  engine_version = lookup(local.cache_engine_versions, var.cache_engine, "")
   node_type      = "cache.t4g.micro"
 
   maintenance_window = "sun:05:00-sun:09:00"
@@ -26,7 +39,7 @@ module "cache_redis" {
 
   # Parameter Group
   create_parameter_group = true
-  parameter_group_family = "redis7"
+  parameter_group_family = lookup(local.cache_engine_param_groups, var.cache_engine, "")
   parameters = [
     {
       name  = "latency-tracking"
