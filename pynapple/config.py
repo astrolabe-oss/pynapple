@@ -8,6 +8,8 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     REDIS_HOST = os.environ.get('SANDBOX_REDIS_HOST')
     MEMCACHED_HOST = os.environ.get('SANDBOX_MEMCACHED_HOST')
+    DOWNSTREAM_PYNAPPLE_HOST = os.environ.get('DOWNSTREAM_PYNAPPLE_HOST', '')
+    DOWNSTREAM_PYNAPPLE_INTERVAL = os.environ.get('DOWNSTREAM_PYNAPPLE_INTERVAL', 1)
 
 
 class DevelopmentConfig(Config):

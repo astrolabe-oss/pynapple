@@ -8,3 +8,4 @@ cryptography~=42.0  # needed by mysql but for some reason not implicitly install
 Flask-Migrate~=4.0
 redis~=5.0
 python-memcached~=1.62
+requests~=2.31

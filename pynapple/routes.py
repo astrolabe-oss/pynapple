@@ -37,7 +37,7 @@ def add_pynapple():
 
     # instantiate and store pynapple
     new_pynapple = pynapple_service.add_pynapple(ripeness, selfie)
-    return _response(new_pynapple, 201)
+    return _response(new_pynapple), 201
 
 
 @app.route('/pynapples/<int:id>', methods=['GET'])

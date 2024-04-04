@@ -1,6 +1,8 @@
 import json
-
+import logging
 from pynapple.models import Pynapple
+
+logger = logging.getLogger(__name__)
 
 
 class PynappleService:
@@ -12,11 +14,13 @@ class PynappleService:
         # Check cache first
         cached_pynapples = self.cache_client.get('pynapples')
         if cached_pynapples:
+            logger.info(f"Found {len(cached_pynapples)} pynapples using: CACHE")
             return json.loads(cached_pynapples), 'cache'
 
         # Fall back to database if not in cache
         pynapples = Pynapple.query.all()
         pynapples_list = [pynapple.to_dict() for pynapple in pynapples]
+        logger.info(f"Found {len(pynapples_list)} pynapples using: DB")
         self.cache_client.set('pynapples', json.dumps(pynapples_list), timeout=60)  # Refresh cache
         return pynapples_list, 'db'
 

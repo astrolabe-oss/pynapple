@@ -1,4 +1,6 @@
-from pynapple.config import DevelopmentConfig
+from pynapple.config import Config
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Cache:
@@ -21,10 +23,10 @@ class RedisCache(Cache):
         return self.redis.get(key)
 
     def set(self, key, value, timeout=None):
-        self.redis.set(key, value, ex=timeout)
+        return self.redis.set(key, value, ex=timeout)
 
     def delete(self, key):
-        self.redis.delete(key)
+        return self.redis.delete(key)
 
 
 class MemcachedCache(Cache):
@@ -36,10 +38,10 @@ class MemcachedCache(Cache):
         return self.memcached.get(key)
 
     def set(self, key, value, timeout=None):
-        self.memcached.set(key, value, time=timeout)
+        return self.memcached.set(key, value, time=timeout)
 
     def delete(self, key):
-        self.memcached.delete(key)
+        return self.memcached.delete(key)
 
 
 class NullCacheClient(Cache):
@@ -54,7 +56,11 @@ class NullCacheClient(Cache):
 
 
 cache_client = NullCacheClient()
-if DevelopmentConfig.REDIS_HOST:
-    cache_client = RedisCache(host=DevelopmentConfig.REDIS_HOST)
-elif DevelopmentConfig.MEMCACHED_HOST:
-    cache_client = MemcachedCache(host=DevelopmentConfig.MEMCACHED_HOST)
+if Config.REDIS_HOST:
+    logger.info('Using Redis for caching')
+    cache_client = RedisCache(host=Config.REDIS_HOST)
+elif Config.MEMCACHED_HOST:
+    logger.info('Using Memcached for caching')
+    cache_client = MemcachedCache(host=Config.MEMCACHED_HOST)
+else:
+    logger.info('Use NullCacheClient (no caching!)')

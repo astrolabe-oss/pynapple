@@ -1,8 +1,10 @@
-#!/bin/bash -x
+#!/bin/bash -ex
 
 # APP CONFIG
-APP_NAME="pynapple1"
-REPOSITORY=sandbox1-pynapple1
+APP_NAME1="pynapple1"
+APP_NAME2="pynapple2"
+REPOSITORY1=sandbox1-pynapple1
+REPOSITORY2=sandbox1-pynapple2
 
 # SANDBOX ENV CONFIG
 AWS_ACCOUNT_CR=517988372097
@@ -28,15 +30,21 @@ fi
 aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_CR}.dkr.ecr.${AWS_REGION}.amazonaws.com
 
 # BUILD
-docker build --no-cache -t ${APP_NAME}:${TIMESTAMP} .
+docker build --no-cache -t ${APP_NAME1}:${TIMESTAMP} .
+docker build --no-cache -t ${APP_NAME2}:${TIMESTAMP} .
 
 # TAG/PUSH VERSION
-docker tag ${APP_NAME}:${TIMESTAMP} ${AWS_ACCOUNT_CR}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPOSITORY}:${TIMESTAMP}
-docker push ${AWS_ACCOUNT_CR}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPOSITORY}:${TIMESTAMP}
+docker tag ${APP_NAME1}:${TIMESTAMP} ${AWS_ACCOUNT_CR}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPOSITORY1}:${TIMESTAMP}
+docker push ${AWS_ACCOUNT_CR}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPOSITORY1}:${TIMESTAMP}
+docker tag ${APP_NAME2}:${TIMESTAMP} ${AWS_ACCOUNT_CR}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPOSITORY2}:${TIMESTAMP}
+docker push ${AWS_ACCOUNT_CR}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPOSITORY2}:${TIMESTAMP}
 
 # TAG/PUSH LATEST
-docker tag ${APP_NAME}:${TIMESTAMP} ${AWS_ACCOUNT_CR}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPOSITORY}:latest
-docker push ${AWS_ACCOUNT_CR}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPOSITORY}:latest
+docker tag ${APP_NAME1}:${TIMESTAMP} ${AWS_ACCOUNT_CR}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPOSITORY1}:latest
+docker push ${AWS_ACCOUNT_CR}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPOSITORY1}:latest
+docker tag ${APP_NAME2}:${TIMESTAMP} ${AWS_ACCOUNT_CR}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPOSITORY2}:latest
+docker push ${AWS_ACCOUNT_CR}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPOSITORY2}:latest
 
 # TRIGGER DEPLOY
-kubectl rollout restart deployment/${APP_NAME}
+#kubectl rollout restart deployment/${APP_NAME1}
+kubectl rollout restart deployment/${APP_NAME2}
