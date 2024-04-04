@@ -2,8 +2,8 @@ module "pynapple1" {
   source = "./modules/sandbox_service"
 
   # app
-  env_name       = local.env_name
-  app_name       = "pynapple1"
+  env_name = local.env_name
+  app_name = "pynapple1"
 
   # networking
   vpc_id                     = module.vpc.vpc_id
@@ -14,16 +14,16 @@ module "pynapple1" {
   key_pair_name              = aws_key_pair.infra_2024_1_30_1.key_name
   ip_addresses_devs          = local.ip_addresses_devs
   eks_node_security_group_id = module.eks.node_security_group_id
-  security_group_ids         = [
+  security_group_ids = [
     aws_security_group.allow_ssh.id,
     module.vpc.default_security_group_id
   ]
 
   # components
-  app_db_name          = "pynapple"
-  database_engine      = "postgres"
-  cache_engine         = "redis"
-  container_env_vars   = [
+  app_db_name     = "pynapple"
+  database_engine = "postgres"
+  cache_engine    = "redis"
+  container_env_vars = [
     {
       name  = "FLASK_ENV"
       value = "development"
@@ -31,5 +31,5 @@ module "pynapple1" {
   ]
 
   # tags
-  common_tags    = local.common_tags
+  common_tags = local.common_tags
 }

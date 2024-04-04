@@ -26,8 +26,8 @@ module "cache" {
   apply_immediately  = true
 
   # Networking
-  subnet_ids           = var.private_subnets
-  vpc_id               = var.vpc_id
+  subnet_ids = var.private_subnets
+  vpc_id     = var.vpc_id
   security_group_rules = {
     ingress_vpc = {
       description = "VPC traffic"

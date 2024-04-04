@@ -1,7 +1,7 @@
 resource "kubernetes_deployment" "this" {
   depends_on = [
     kubernetes_secret.db_secret,
-    module.asg  # this is because during first apply, we need the ASG to come up to run db init scripts...
+    module.asg # this is because during first apply, we need the ASG to come up to run db init scripts...
   ]
   metadata {
     name = var.app_name
@@ -89,7 +89,7 @@ resource "kubernetes_service" "pynapple_lb" {
       port        = 80
       target_port = 80
     }
-    type = "LoadBalancer"
+    type                        = "LoadBalancer"
     load_balancer_source_ranges = var.ip_addresses_devs
   }
 }

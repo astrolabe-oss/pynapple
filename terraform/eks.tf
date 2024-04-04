@@ -11,8 +11,8 @@ module "eks" {
 
   eks_managed_node_groups = {
     "${local.env_name}_eks_ng1_arm" = {
-      max_capacity     = 10
-      min_capacity     = 1
+      max_capacity = 10
+      min_capacity = 1
 
       instance_type = "t4g.small"
       ami_type      = "AL2_ARM_64"
