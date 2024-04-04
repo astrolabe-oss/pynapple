@@ -1,7 +1,12 @@
 #!/bin/bash -ex
 
 # INSTALL PSQL (psql is not installed by default on amazon linux)
-sudo yum -y install postgresql15
+# Check if psql is installed
+if ! psql --version &>/dev/null; then
+    sudo yum -y install postgresql15
+else
+    echo "psql is already installed."
+fi
 
 # ARGS
 export PGPASSWORD="${db_admin_pw}"

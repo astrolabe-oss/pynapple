@@ -112,10 +112,10 @@ module "asg" {
     echo "SANDBOX_APP_NAME=${var.app_name}" >> /etc/environment
     echo "export SANDBOX_APP_NAME=${var.app_name}" >> /etc/profile
     sudo su - ec2-user
-    echo "SANDBOX_APP_NAME=${var.app_name}" >> /home/ec2-user/${var.app_name}.env
-    echo "SANDBOX_DATABASE_URI=${local.database_conn_str}" >> /home/ec2-user/${var.app_name}.env
-    ${var.cache_engine == "redis" ? "echo \"SANDBOX_REDIS_HOST=${module.cache.cluster_cache_nodes[0].address}\" >> /home/ec2-user/${var.app_name}.env" : ""}
-    ${var.cache_engine == "memcached" ? "echo \"SANDBOX_MEMCACHED_HOST=${module.cache.cluster_cache_nodes[0].address}:11211\" >> /home/ec2-user/${var.app_name}.env" : ""}
+    echo "SANDBOX_APP_NAME=${var.app_name}" >> /home/ec2-user/sandbox_app.env
+    echo "SANDBOX_DATABASE_URI=${local.database_conn_str}" >> /home/ec2-user/sandbox_app.env
+    ${var.cache_engine == "redis" ? "echo \"SANDBOX_REDIS_HOST=${module.cache.cluster_cache_nodes[0].address}\" >> /home/ec2-user/sandbox_app.env" : ""}
+    ${var.cache_engine == "memcached" ? "echo \"SANDBOX_MEMCACHED_HOST=${module.cache.cluster_cache_nodes[0].address}:11211\" >> /home/ec2-user/sandbox_app.env" : ""}
 
     ### INSTALL AND RUN ###
     export SANDBOX_APP_NAME="${var.app_name}"  # couldn't figure out how to make su ec2-user read this!

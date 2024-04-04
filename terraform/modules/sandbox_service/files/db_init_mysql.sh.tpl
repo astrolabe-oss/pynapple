@@ -1,10 +1,18 @@
 #!/bin/bash -ex
 
 # INSTALL MYSQL (not installed on amazon linux by default)
-rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2023
-wget https://dev.mysql.com/get/mysql80-community-release-el9-1.noarch.rpm
-dnf install mysql80-community-release-el9-1.noarch.rpm -y
-dnf install mysql-community-server -y
+# Check if MySQL is installed
+if ! mysql --version &>/dev/null; then
+    echo "MySQL not installed. Proceeding with installation."
+
+    # INSTALL MYSQL (not installed on Amazon Linux by default)
+    rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2023
+    wget https://dev.mysql.com/get/mysql80-community-release-el9-1.noarch.rpm
+    dnf install mysql80-community-release-el9-1.noarch.rpm -y
+    dnf install mysql-community-server -y
+else
+    echo "MySQL is already installed."
+fi
 
 # ARGS
 export MYSQL_PWD="${db_admin_pw}"
@@ -22,4 +30,25 @@ if ! mysql -u"$DB_ADMIN" -h "$DB_HOST" -e "SELECT 1 FROM mysql.user WHERE user =
     echo "MySQL user and privileges setup completed."
 else
     echo "User $USER_NAME already exists."
+fi
+
+# Check if MySQL is installed
+if ! mysql --version &>/dev/null; then
+    echo "MySQL not installed. Proceeding with installation."
+
+    # INSTALL MYSQL (not installed on Amazon Linux by default)
+    rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2023
+    wget https://dev.mysql.com/get/mysql80-community-release-el9-1.noarch.rpm
+    dnf install mysql80-community-release-el9-1.noarch.rpm -y
+    dnf install mysql-community-server -y
+else
+    echo "MySQL is already installed."
+fi
+
+# VERIFY NEW USER ACCESS
+export MYSQL_PWD="$USER_PASSWORD"
+if mysql -u"$USER_NAME" -h "$DB_HOST" "$DB_NAME" -e "SELECT 1;" | grep -q 1; then
+    echo "Verification success: User $USER_NAME can access the database $DB_NAME."
+else
+    echo "Verification failed: User $USER_NAME cannot access the database $DB_NAME."
 fi

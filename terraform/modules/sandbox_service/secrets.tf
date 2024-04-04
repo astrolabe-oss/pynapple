@@ -1,6 +1,7 @@
 resource "random_password" "pynapple_password" {
   length  = 12
   special = true
+  override_special = "+:()~."
 }
 
 resource "aws_secretsmanager_secret" "application_db_user_pass" {

@@ -25,8 +25,9 @@ module "cache" {
   maintenance_window = "sun:05:00-sun:09:00"
   apply_immediately  = true
 
-  # Security group
-  vpc_id = var.vpc_id
+  # Networking
+  subnet_ids           = var.private_subnets
+  vpc_id               = var.vpc_id
   security_group_rules = {
     ingress_vpc = {
       description = "VPC traffic"
@@ -34,18 +35,10 @@ module "cache" {
     }
   }
 
-  # Subnet Group
-  subnet_ids = var.private_subnets
+  # We don't need no stinkin' this stuff
+  create_parameter_group     = false
+  transit_encryption_enabled = false
 
-  # Parameter Group
-  create_parameter_group = true
-  parameter_group_family = lookup(local.cache_engine_param_groups, var.cache_engine, "")
-  parameters = [
-    {
-      name  = "latency-tracking"
-      value = "yes"
-    }
-  ]
-
+  # Tags
   tags = var.common_tags
 }

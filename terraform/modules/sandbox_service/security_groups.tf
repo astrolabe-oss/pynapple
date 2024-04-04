@@ -23,6 +23,20 @@ resource "aws_security_group" "rds_access" {
   vpc_id      = var.vpc_id
 
   ingress {
+    from_port = 3306
+    to_port   = 3306
+    protocol  = "tcp"
+    security_groups = [aws_security_group.instances_default.id]
+  }
+
+  ingress {
+    from_port = 3306
+    to_port   = 3306
+    protocol  = "tcp"
+    cidr_blocks = var.ip_addresses_devs
+  }
+
+  ingress {
     from_port = 5432
     to_port   = 5432
     protocol  = "tcp"

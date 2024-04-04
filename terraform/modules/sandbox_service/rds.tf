@@ -4,7 +4,11 @@ locals {
     postgres = "14.11"
     mysql    = "8.0.35"
   }
-  database_conn_str  = "postgresql://${var.app_name}:${aws_secretsmanager_secret_version.application_db_user_pass.secret_string}@${module.rdbms.db_instance_endpoint}/${var.app_db_name}"
+  db_engine_protocols = {
+    postgres = "postgresql"
+    mysql    = "mysql+pymysql"
+  }
+  database_conn_str  = "${lookup(local.db_engine_protocols, var.database_engine, "")}://${var.app_name}:${aws_secretsmanager_secret_version.application_db_user_pass.secret_string}@${module.rdbms.db_instance_endpoint}/${var.app_db_name}"
 }
 
 module "rdbms" {
@@ -33,6 +37,7 @@ module "rdbms" {
   subnet_ids             = var.database_subnets
 
   create_db_parameter_group = false
+  create_db_option_group    = false
 
   tags = var.common_tags
 }
