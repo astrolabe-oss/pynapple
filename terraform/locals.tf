@@ -1,5 +1,5 @@
 locals {
-  env_name       = "sandbox1"
+  env_name = "sandbox1"
   common_tags = {
     Terraform   = "true"
     Environment = local.env_name

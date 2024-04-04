@@ -1,5 +1,5 @@
 locals {
-  db_admin           = "dbadmin"
+  db_admin = "dbadmin"
   db_engine_versions = {
     postgres = "14.11"
     mysql    = "8.0.35"
@@ -8,7 +8,7 @@ locals {
     postgres = "postgresql"
     mysql    = "mysql+pymysql"
   }
-  database_conn_str  = "${lookup(local.db_engine_protocols, var.database_engine, "")}://${var.app_name}:${aws_secretsmanager_secret_version.application_db_user_pass.secret_string}@${module.rdbms.db_instance_endpoint}/${var.app_db_name}"
+  database_conn_str = "${lookup(local.db_engine_protocols, var.database_engine, "")}://${var.app_name}:${aws_secretsmanager_secret_version.application_db_user_pass.secret_string}@${module.rdbms.db_instance_endpoint}/${var.app_db_name}"
 }
 
 module "rdbms" {
@@ -30,7 +30,7 @@ module "rdbms" {
   maintenance_window     = "Mon:00:00-Mon:03:00"
   backup_window          = "03:00-06:00"
   deletion_protection    = true
-  publicly_accessible    = true  # this is so we provision db user via terraform below
+  publicly_accessible    = true # this is so we provision db user via terraform below
 
   # DB subnet group
   create_db_subnet_group = true

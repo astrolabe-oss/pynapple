@@ -63,8 +63,8 @@ variable "eks_node_security_group_id" {
 variable "container_env_vars" {
   description = "Environment variables for the container"
   type = list(object({
-    name      = string
-    value     = optional(string)
+    name  = string
+    value = optional(string)
     valueFrom = optional(object({
       secret_key_ref = optional(object({
         name = string

@@ -57,7 +57,7 @@ module "asg" {
       delete_on_termination = true
       description           = "eth0"
       device_index          = 0
-      security_groups       = concat(var.security_group_ids,[
+      security_groups = concat(var.security_group_ids, [
         aws_security_group.instances_default.id,
         aws_security_group.alb_to_asg.id
       ])
@@ -72,25 +72,25 @@ module "asg" {
 
     # DB INIT SCRIPTS
     cat <<'SCRIPT' > ./db_init_pg.sh
-    ${templatefile("${path.module}/files/db_init_pg.sh.tpl",{
-        app_user=var.app_name,
-        app_user_pw=aws_secretsmanager_secret_version.application_db_user_pass.secret_string,
-        db_admin=local.db_admin,
-        db_admin_pw=jsondecode(data.aws_secretsmanager_secret_version.db_credentials.secret_string)["password"],
-        db_host=module.rdbms.db_instance_address,
-        db_name=var.app_db_name
+    ${templatefile("${path.module}/files/db_init_pg.sh.tpl", {
+    app_user    = var.app_name,
+    app_user_pw = aws_secretsmanager_secret_version.application_db_user_pass.secret_string,
+    db_admin    = local.db_admin,
+    db_admin_pw = jsondecode(data.aws_secretsmanager_secret_version.db_credentials.secret_string)["password"],
+    db_host     = module.rdbms.db_instance_address,
+    db_name     = var.app_db_name
     })}
     SCRIPT
     chmod 700 db_init_pg.sh
     cat <<'SCRIPT' > ./db_init_mysql.sh
-    ${templatefile("${path.module}/files/db_init_mysql.sh.tpl",{
-        app_user=var.app_name,
-        app_user_pw=aws_secretsmanager_secret_version.application_db_user_pass.secret_string,
-        db_admin=local.db_admin,
-        db_admin_pw=jsondecode(data.aws_secretsmanager_secret_version.db_credentials.secret_string)["password"],
-        db_host=module.rdbms.db_instance_address,
-        db_name=var.app_db_name
-    })}
+    ${templatefile("${path.module}/files/db_init_mysql.sh.tpl", {
+    app_user    = var.app_name,
+    app_user_pw = aws_secretsmanager_secret_version.application_db_user_pass.secret_string,
+    db_admin    = local.db_admin,
+    db_admin_pw = jsondecode(data.aws_secretsmanager_secret_version.db_credentials.secret_string)["password"],
+    db_host     = module.rdbms.db_instance_address,
+    db_name     = var.app_db_name
+})}
     SCRIPT
     chmod 700 db_init_mysql.sh
 
@@ -124,7 +124,7 @@ module "asg" {
     ### SETUP SSM SSH ###
     sudo systemctl start amazon-ssm-agent
   EOF
-  )
+)
 
-  tags = var.common_tags
+tags = var.common_tags
 }

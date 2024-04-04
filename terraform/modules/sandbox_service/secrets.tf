@@ -1,6 +1,6 @@
 resource "random_password" "pynapple_password" {
-  length  = 12
-  special = true
+  length           = 12
+  special          = true
   override_special = "+:()~."
 }
 
