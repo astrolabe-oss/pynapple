@@ -60,17 +60,29 @@ variable "eks_node_security_group_id" {
   type        = string
 }
 # components
-variable "container_env_vars" {
-  description = "Environment variables for the container"
+variable "common_env_vars" {
+  description = "Environment variables for all app runtimes"
   type = list(object({
     name  = string
-    value = optional(string)
-    valueFrom = optional(object({
-      secret_key_ref = optional(object({
-        name = string
-        key  = string
-      }))
-    }))
+    value = string
+  }))
+  default = []
+}
+
+variable "k8s_env_vars" {
+  description = "Environment variables for the k8s containers"
+  type = list(object({
+    name  = string
+    value = string
+  }))
+  default = []
+}
+
+variable "ec2_env_vars" {
+  description = "Environment variables for the ec2 vms"
+  type = list(object({
+    name  = string
+    value = string
   }))
   default = []
 }

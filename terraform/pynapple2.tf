@@ -23,7 +23,7 @@ module "pynapple2" {
   app_db_name     = "pynapple"
   database_engine = "mysql"
   cache_engine    = "memcached"
-  container_env_vars = [
+  common_env_vars = [
     {
       name  = "FLASK_ENV"
       value = "development"

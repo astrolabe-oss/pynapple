@@ -23,10 +23,22 @@ module "pynapple1" {
   app_db_name     = "pynapple"
   database_engine = "postgres"
   cache_engine    = "redis"
-  container_env_vars = [
+  common_env_vars = [
     {
       name  = "FLASK_ENV"
       value = "development"
+    }
+  ]
+  k8s_env_vars = [
+    {
+      name  = "DOWNSTREAM_PYNAPPLE_HOST"
+      value = "k8s.pynapple2.sandbox1.magellanbot.com"
+    }
+  ]
+  ec2_env_vars = [
+    {
+      name  = "DOWNSTREAM_PYNAPPLE_HOST"
+      value = "ec2.pynapple2.sandbox1.magellanbot.com"
     }
   ]
 

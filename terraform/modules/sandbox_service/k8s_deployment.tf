@@ -1,3 +1,7 @@
+locals {
+  k8s_combined_env_vars = concat(var.common_env_vars, var.k8s_env_vars)
+}
+
 resource "kubernetes_deployment" "this" {
   depends_on = [
     kubernetes_secret.db_secret,
@@ -55,23 +59,10 @@ resource "kubernetes_deployment" "this" {
             }
           }
           dynamic "env" {
-            for_each = var.container_env_vars
+            for_each = local.k8s_combined_env_vars
             content {
               name  = env.value.name
               value = env.value.value
-
-              dynamic "value_from" {
-                for_each = env.value.valueFrom != null ? [env.value.valueFrom] : []
-                content {
-                  dynamic "secret_key_ref" {
-                    for_each = env.value.valueFrom.secret_key_ref != null ? [env.value.valueFrom.secret_key_ref] : []
-                    content {
-                      name = secret_key_ref.value.name
-                      key  = secret_key_ref.value.key
-                    }
-                  }
-                }
-              }
             }
           }
         }
