@@ -1,3 +1,7 @@
+locals {
+  ec2_combined_env_vars = concat(var.common_env_vars, var.ec2_env_vars)
+}
+
 module "asg" {
   source = "terraform-aws-modules/autoscaling/aws"
 
@@ -116,6 +120,16 @@ module "asg" {
     echo "SANDBOX_DATABASE_URI=${local.database_conn_str}" >> /home/ec2-user/sandbox_app.env
     ${var.cache_engine == "redis" ? "echo \"SANDBOX_REDIS_HOST=${module.cache.cluster_cache_nodes[0].address}\" >> /home/ec2-user/sandbox_app.env" : ""}
     ${var.cache_engine == "memcached" ? "echo \"SANDBOX_MEMCACHED_HOST=${module.cache.cluster_cache_nodes[0].address}:11211\" >> /home/ec2-user/sandbox_app.env" : ""}
+
+    ### CUSTOM ENV VARS ###
+    ENV_VARS_JSON='${jsonencode([for ev in local.ec2_combined_env_vars : { name = ev.name, value = ev.value }])}'
+    for row in $(echo $ENV_VARS_JSON | jq -c '.[]'); do
+      name=$(echo $row | jq -r '.name')
+      value=$(echo $row | jq -r '.value')
+      echo "$name=$value" >> /home/ec2-user/sandbox_app.env
+      echo "$name=$value" >> /etc/environment
+      echo "$name=$value" >> /etc/profile
+    done
 
     ### INSTALL AND RUN ###
     export SANDBOX_APP_NAME="${var.app_name}"  # couldn't figure out how to make su ec2-user read this!
