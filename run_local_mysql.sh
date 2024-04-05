@@ -1,3 +1,5 @@
+#!/bin/bash -ex
+
 ###################
 ### MYSQL SETUP ###
 ###################
@@ -68,8 +70,8 @@ pip install -r requirements.txt
 
 # Run pynapple
 # Adjust the database URI for MySQL
-export PYNAPPLE_DATABASE_URI="mysql+pymysql://pynapple:ripe@localhost/pynapple"
-export PYNAPPLE_MEMCACHED_HOST="localhost:11211"
-unset PYNAPPLE_REDIS_HOST
-env | grep PYNAPPLE
+export SANDBOX_DATABASE_URI="mysql+pymysql://pynapple:ripe@localhost/pynapple"
+export SANDBOX_MEMCACHED_HOST="localhost:11211"
+unset SANDBOX_REDIS_HOST
+
 PYTHONPATH=.. FLASK_APP=run.py flask run

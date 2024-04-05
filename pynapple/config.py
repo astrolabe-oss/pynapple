@@ -10,7 +10,7 @@ class Config:
     MEMCACHED_HOST = os.environ.get('SANDBOX_MEMCACHED_HOST')
     DOWNSTREAM_PYNAPPLE_HOST = os.environ.get('DOWNSTREAM_PYNAPPLE_HOST', '')
     DOWNSTREAM_PYNAPPLE_INTERVAL = os.environ.get('DOWNSTREAM_PYNAPPLE_INTERVAL', 1)
-
+    CACHE_REFRESH_THRESHOLD = os.environ.get('PYNAPPLE_CACHE_REFRESH_THRESHOLD', 10)
 
 class DevelopmentConfig(Config):
     DEBUG = True

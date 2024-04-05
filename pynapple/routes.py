@@ -3,7 +3,8 @@ from pynapple.flask_app import app
 from pynapple.cache import cache_client
 from pynapple.services import PynappleService
 from pynapple.models import db
-
+import logging
+logger = logging.getLogger(__name__)
 
 pynapple_service = PynappleService(db, cache_client)
 
@@ -24,6 +25,7 @@ def add_pynapple():
     # block remote POSTs
     client_addr = request.headers.get('X-Forwarded-For', request.remote_addr)
     if '127.0.0.1' != client_addr:
+        logger.info(f"Blocking /pynapples POST request from {client_addr}")
         abort(403)
 
     # get pynapple from request data

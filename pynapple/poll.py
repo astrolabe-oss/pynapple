@@ -1,21 +1,33 @@
-import os
+import requests
 import threading
 import time
-import requests
 from pynapple import config
+import logging
+logger = logging.getLogger(__name__)
 
 
-def poll_downstream_pynapple():
-    if config.Config.DOWNSTREAM_PYNAPPLE_HOST:
-        threading.Thread(target=_poll_downstream_pynapple, daemon=True).start()
+def poll_downstream_pynapples():
+    dph = config.Config.DOWNSTREAM_PYNAPPLE_HOST
+    if dph:
+        logger.info(f"Pynapple configured to poll downstream pynapple!: `{dph}`")
+        threading.Thread(target=_poll_downstream_pynapples, daemon=True).start()
+    else:
+        logger.info("Pynapple not configured to poll any downstream pynapples... womp womp :(")
 
 
-def _poll_downstream_pynapple():
-    ds_host = config.Config.DOWNSTREAM_PYNAPPLE_HOST
+def _poll_downstream_pynapples():
+    ds_uri = f"http://{config.Config.DOWNSTREAM_PYNAPPLE_HOST}/pynapples"
     while True:
         try:
-            response = requests.get(ds_host)
-            print(f"Polled downstream pynapple (${ds_host}): {response.status_code}")
+            logger.info(f"Polling {ds_uri}...")
+            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
+            response = requests.get(ds_uri, proxies={'no': 'pass'}, headers=headers)
+            if response.status_code == 200:
+                # Assuming the endpoint returns a list of pynapples in JSON format
+                pynapples = response.json()
+                logger.info(f"Polled {len(pynapples['pynapples'])} downstream pynapples successfully.")
+            else:
+                logger.warning(f"Failed to poll downstream pynapple: HTTP {response.status_code}")
         except Exception as e:
-            print(f"Error polling pynapple2: {e}")
+            logger.error(f"Error polling downstream pynapple: {e}")
         time.sleep(config.Config.DOWNSTREAM_PYNAPPLE_INTERVAL)

@@ -1,7 +1,7 @@
 import json
 import logging
 from pynapple.models import Pynapple
-
+from pynapple.config import Config
 logger = logging.getLogger(__name__)
 
 
@@ -9,13 +9,21 @@ class PynappleService:
     def __init__(self, db, cache_client):
         self.db = db
         self.cache_client = cache_client
+        self.request_count = 0
+        self.cache_refresh_threshold = Config.CACHE_REFRESH_THRESHOLD  # Load the threshold from configuration
 
     def get_pynapples(self):
-        # Check cache first
+        self.request_count += 1
+        if self.request_count >= self.cache_refresh_threshold:
+            logger.info(f"Cache refresh threshold ({self.cache_refresh_threshold}) reached. Refreshing cache.")
+            self.invalidate_cache()
+            self.request_count = 0
+
         cached_pynapples = self.cache_client.get('pynapples')
         if cached_pynapples:
-            logger.info(f"Found {len(cached_pynapples)} pynapples using: CACHE")
-            return json.loads(cached_pynapples), 'cache'
+            jsapples = json.loads(cached_pynapples)
+            logger.info(f"Found {len(jsapples)} pynapples using: CACHE")
+            return jsapples, 'cache'
 
         # Fall back to database if not in cache
         pynapples = Pynapple.query.all()

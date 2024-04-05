@@ -50,6 +50,6 @@ echo "Backup completed and uploaded to $S3_BUCKET2"
 # Conditional redeployment based on the -r flag
 if [ "$REFRESH_ASG_INSTANCES" = true ] ; then
   echo "Refreshing ASG instances the service..."
-#  aws autoscaling start-instance-refresh --auto-scaling-group-name $ASG_NAME1
+  aws autoscaling start-instance-refresh --auto-scaling-group-name $ASG_NAME1
   aws autoscaling start-instance-refresh --auto-scaling-group-name $ASG_NAME2
 fi
