@@ -46,5 +46,5 @@ docker tag ${APP_NAME2}:${TIMESTAMP} ${AWS_ACCOUNT_CR}.dkr.ecr.${AWS_REGION}.ama
 docker push ${AWS_ACCOUNT_CR}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPOSITORY2}:latest
 
 # TRIGGER DEPLOY
-#kubectl rollout restart deployment/${APP_NAME1}
+kubectl rollout restart deployment/${APP_NAME1}
 kubectl rollout restart deployment/${APP_NAME2}

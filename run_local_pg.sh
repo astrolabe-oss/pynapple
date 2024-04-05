@@ -1,7 +1,10 @@
+#!/bin/bash -ex
+
 ######################
 ### POSTGRES SETUP ###
 ######################
-if ! brew list | grep "^postgresql"; then brew install postgresql fi
+if ! brew list | grep "^postgresql"; then
+    brew install postgresql
 else
     echo "PostgreSQL is already installed."
 fi
@@ -59,8 +62,8 @@ pip install -r requirements.txt
 
 
 # run pynapple
-export PYNAPPLE_DATABASE_URI=postgresql://pynapple:ripe@localhost:5432/pynapple
-export PYNAPPLE_REDIS_HOST=localhost
-unset PYNAPPLE_MEMCACHED_HOST
-env | grep PYNAPPLE
+export SANDBOX_DATABASE_URI=postgresql://pynapple:ripe@localhost:5432/pynapple
+export SANDBOX_REDIS_HOST=localhost
+unset SANDBOX_MEMCACHED_HOST
+
 PYTHONPATH=.. FLASK_APP=run.py flask run
