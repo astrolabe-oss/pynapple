@@ -1,7 +1,7 @@
 locals {
   db_admin = "dbadmin"
   db_engine_versions = {
-    postgres = "14.11"
+    postgres = "14.12"
     mysql    = "8.0.35"
   }
   db_engine_protocols = {

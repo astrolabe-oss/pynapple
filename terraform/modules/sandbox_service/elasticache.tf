@@ -20,7 +20,7 @@ module "cache" {
 
   engine         = var.cache_engine
   engine_version = lookup(local.cache_engine_versions, var.cache_engine, "")
-  node_type      = "cache.t4g.micro"
+  node_type      = "cache.t3.micro"
 
   maintenance_window = "sun:05:00-sun:09:00"
   apply_immediately  = true

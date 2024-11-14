@@ -28,6 +28,14 @@ module "asg" {
     triggers = ["tag"]
   }
 
+  # Traffic source attachment
+  traffic_source_attachments = {
+    ex-alb = {
+      traffic_source_identifier = module.alb.target_groups["asg"].arn
+      traffic_source_type       = "elbv2"
+    }
+  }
+
   # Launch template
   launch_template_name        = local.env_app_name
   launch_template_description = "${"Launch template for "}${local.env_app_name}"
@@ -136,11 +144,4 @@ module "asg" {
 )
 
 tags = var.common_tags
-}
-
-
-resource "aws_lb_target_group_attachment" "asg_attachment" {
-  target_group_arn = module.alb.target_groups["asg"].arn
-  target_id        = module.asg.autoscaling_group_id
-#   port             = 80  # Replace with the correct port for your application
 }
