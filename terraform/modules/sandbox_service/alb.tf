@@ -30,10 +30,6 @@ module "alb" {
     }
   }
 
-  access_logs = {
-    bucket = aws_s3_bucket.nlb_logs.bucket
-  }
-
   target_groups = {
     asg = {
       name_prefix       = "http"
