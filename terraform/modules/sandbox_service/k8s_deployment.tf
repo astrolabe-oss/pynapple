@@ -48,7 +48,7 @@ resource "kubernetes_deployment" "this" {
             for_each = var.enable_resources && var.cache_engine == "redis" ? [1] : []
             content {
               name  = "SANDBOX_REDIS_HOST"
-              value = var.enable_resources ? module.cache[0].cluster_cache_nodes.address : ""
+              value = var.enable_resources ? module.cache[0].cluster_cache_nodes[0].address : ""
             }
           }
 
@@ -56,7 +56,7 @@ resource "kubernetes_deployment" "this" {
             for_each = var.enable_resources && var.cache_engine == "memcached" ? [1] : []
             content {
               name  = "SANDBOX_MEMCACHED_HOST"
-              value = var.enable_resources ? "${module.cache[0].cluster_cache_nodes.address}:11211" : ""
+              value = var.enable_resources ? "${module.cache[0].cluster_cache_nodes[0].address}:11211" : ""
             }
           }
           dynamic "env" {

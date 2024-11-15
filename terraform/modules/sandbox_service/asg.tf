@@ -57,7 +57,8 @@ module "asg" {
   }
   iam_role_policies = {
     AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
-    PynappleDeployBucket         = aws_iam_policy.deploy_bucket_read.arn
+    PynappleDeployBucket         = aws_iam_policy.deploy_bucket_read.arn,
+    PynappleDBInitBucket         = aws_iam_policy.db_init_bucket_rw.arn
   }
 
   network_interfaces = [
@@ -79,28 +80,34 @@ module "asg" {
     cd /home/ec2-user
 
     # DB INIT SCRIPTS
-    cat <<'SCRIPT' > ./db_init_pg.sh
-    ${templatefile("${path.module}/files/db_init_pg.sh.tpl", {
-    app_user    = var.app_name,
-    app_user_pw = aws_secretsmanager_secret_version.application_db_user_pass.secret_string,
-    db_admin    = local.db_admin,
-    db_admin_pw = var.enable_resources ? jsondecode(data.aws_secretsmanager_secret_version.db_credentials[0].secret_string)["password"] : "",
-    db_host     = var.enable_resources ? module.rdbms[0].db_instance_address : "",
-    db_name     = var.app_db_name
+    cat <<'SCRIPT' > ./db_init_postgres.sh
+    ${templatefile("${path.module}/files/db_init_postgres.sh.tpl", {
+    app_user          = var.app_name,
+    app_user_pw       = aws_secretsmanager_secret_version.application_db_user_pass.secret_string,
+    db_admin          = local.db_admin,
+    db_admin_pw       = var.enable_resources ? jsondecode(data.aws_secretsmanager_secret_version.db_credentials[0].secret_string)["password"] : "",
+    db_host           = var.enable_resources ? module.rdbms[0].db_instance_address : "",
+    db_name           = var.app_db_name
+    db_init_s3_bucket = var.db_init_s3_bucket
     })}
     SCRIPT
-    chmod 700 db_init_pg.sh
+    chmod 700 db_init_postgres.sh
+
     cat <<'SCRIPT' > ./db_init_mysql.sh
     ${templatefile("${path.module}/files/db_init_mysql.sh.tpl", {
-    app_user    = var.app_name,
-    app_user_pw = aws_secretsmanager_secret_version.application_db_user_pass.secret_string,
-    db_admin    = local.db_admin,
-    db_admin_pw = var.enable_resources ? jsondecode(data.aws_secretsmanager_secret_version.db_credentials[0].secret_string)["password"] : "",
-    db_host     = var.enable_resources ? module.rdbms[0].db_instance_address : "",
-    db_name     = var.app_db_name
+    app_user          = var.app_name,
+    app_user_pw       = aws_secretsmanager_secret_version.application_db_user_pass.secret_string,
+    db_admin          = local.db_admin,
+    db_admin_pw       = var.enable_resources ? jsondecode(data.aws_secretsmanager_secret_version.db_credentials[0].secret_string)["password"] : "",
+    db_host           = var.enable_resources ? module.rdbms[0].db_instance_address : "",
+    db_name           = var.app_db_name
+    db_init_s3_bucket = var.db_init_s3_bucket
 })}
     SCRIPT
     chmod 700 db_init_mysql.sh
+
+    # RUN DB INIT
+    sudo /home/ec2-user/db_init_${var.database_engine}.sh # should only execute logic one time depending on a flag written to s3
 
     ### UPDATE AWS CLI
     sudo yum -y remove awscli
@@ -122,8 +129,8 @@ module "asg" {
     sudo su - ec2-user
     echo "SANDBOX_APP_NAME=${var.app_name}" >> /home/ec2-user/sandbox_app.env
     echo "SANDBOX_DATABASE_URI=${local.database_conn_str}" >> /home/ec2-user/sandbox_app.env
-    ${var.cache_engine == "redis" ? "echo \"SANDBOX_REDIS_HOST=${module.cache[0].cluster_cache_nodes.address}\" >> /home/ec2-user/sandbox_app.env" : ""}
-    ${var.cache_engine == "memcached" ? "echo \"SANDBOX_MEMCACHED_HOST=${module.cache[0].cluster_cache_nodes.address}:11211\" >> /home/ec2-user/sandbox_app.env" : ""}
+    ${var.cache_engine == "redis" ? "echo \"SANDBOX_REDIS_HOST=${module.cache[0].cluster_cache_nodes[0].address}\" >> /home/ec2-user/sandbox_app.env" : ""}
+    ${var.cache_engine == "memcached" ? "echo \"SANDBOX_MEMCACHED_HOST=${module.cache[0].cluster_cache_nodes[0].address}:11211\" >> /home/ec2-user/sandbox_app.env" : ""}
 
     ### CUSTOM ENV VARS ###
     ENV_VARS_JSON='${jsonencode([for ev in local.ec2_combined_env_vars : { name = ev.name, value = ev.value }])}'

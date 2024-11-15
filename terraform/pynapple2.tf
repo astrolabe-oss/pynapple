@@ -24,9 +24,12 @@ module "pynapple2" {
   ]
 
   # components
-  app_db_name     = "pynapple"
-  database_engine = "mysql"
-  cache_engine    = "memcached"
+  app_db_name        = "pynapple"
+  database_engine    = "mysql"
+  cache_engine       = "memcached"
+  db_init_s3_bucket = aws_s3_bucket.db_init.bucket
+
+  # runtime env vars
   common_env_vars = [
     {
       name  = "FLASK_ENV"

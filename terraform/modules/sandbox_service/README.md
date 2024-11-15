@@ -5,11 +5,8 @@
       * build and deploy the tarball to the CORRECT s3 bucket to proceed!
     * eks will fail because there is no container in the ECR
       * build and deploy the docker container to the CORRECT ECR repo to proceed!
-  * 
-  * NOW.. ssh to the ec2 instance created
-    * run `/home/ec2-user/db_init_pg.sh` or `/home/ec2-user/db_init_mysql.sh`
-  * terminate ec2 instance, new one should come up and succeed!
-  * k8s deployment should succeed now, restart it if needed
+  * the ec2 node will run the db_init script which will check s3 for a flag to indicate db has been init', so it should only run once
+  * you may need to restart the k8s pods once db_init is run
 * validate service health manually by ec2 load balancer and k8s load balancer/service
 * update `../../../account_cr/route53.tf` with new load balancer values for pretty DNS records 
 

@@ -20,7 +20,7 @@ output "rds_postgres_host" {
 
 output "elasticache_redis_host" {
   description = "Connection Endpoint for the ElastiCache Redis Instance"
-  value       = var.enable_resources ? module.cache[0].cluster_cache_nodes.address : null
+  value       = var.enable_resources ? module.cache[0].cluster_cache_nodes[0].address : null
 }
 
 output "ecr_repo_arn" {

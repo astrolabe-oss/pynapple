@@ -113,3 +113,8 @@ variable "instance_count" {
   type        = number
   default     = 1
 }
+
+variable "db_init_s3_bucket" {
+  description = "S3 Buckets used to store flags to indicate wheter database has been init'd.  Read ec2 instances"
+  type        = string
+}
