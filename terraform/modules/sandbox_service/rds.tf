@@ -8,11 +8,12 @@ locals {
     postgres = "postgresql"
     mysql    = "mysql+pymysql"
   }
-  database_conn_str = "${lookup(local.db_engine_protocols, var.database_engine, "")}://${var.app_name}:${aws_secretsmanager_secret_version.application_db_user_pass.secret_string}@${module.rdbms.db_instance_endpoint}/${var.app_db_name}"
+  database_conn_str = var.enable_resources ? "${lookup(local.db_engine_protocols, var.database_engine, "")}://${var.app_name}:${aws_secretsmanager_secret_version.application_db_user_pass.secret_string}@${module.rdbms[0].db_instance_endpoint}/${var.app_db_name}" : ""
 }
 
 module "rdbms" {
   source = "terraform-aws-modules/rds/aws"
+  count                   = var.enable_resources ? 1 : 0
 
   identifier = "${local.env_app_name}-db"
 
@@ -29,7 +30,7 @@ module "rdbms" {
   vpc_security_group_ids = [aws_security_group.rds_access.id]
   maintenance_window     = "Mon:00:00-Mon:03:00"
   backup_window          = "03:00-06:00"
-  deletion_protection    = true
+  deletion_protection    = false # so we can easily turn it on and off
   publicly_accessible    = true # this is so we provision db user via terraform below
 
   # DB subnet group

@@ -7,7 +7,7 @@ resource "aws_security_group" "alb_to_asg" {
     from_port       = 80
     to_port         = 80
     protocol        = "tcp"
-    security_groups = [module.alb.security_group_id]
+    security_groups = var.enable_resources ? [module.alb[0].security_group_id] : []
   }
 }
 

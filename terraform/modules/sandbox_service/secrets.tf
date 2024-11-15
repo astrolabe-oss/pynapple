@@ -16,5 +16,6 @@ resource "aws_secretsmanager_secret_version" "application_db_user_pass" {
 
 
 data "aws_secretsmanager_secret_version" "db_credentials" {
-  secret_id = module.rdbms.db_instance_master_user_secret_arn
+  count     = var.enable_resources ? 1 : 0
+  secret_id = module.rdbms[0].db_instance_master_user_secret_arn
 }

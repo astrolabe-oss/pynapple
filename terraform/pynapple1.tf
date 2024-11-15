@@ -1,6 +1,10 @@
 module "pynapple1" {
   source = "./modules/sandbox_service"
 
+  # on/off
+  enable_resources = var.enable_resources
+  instance_count   = var.instance_count
+
   # app
   env_name = local.env_name
   app_name = "pynapple1"
@@ -32,13 +36,13 @@ module "pynapple1" {
   k8s_env_vars = [
     {
       name  = "DOWNSTREAM_PYNAPPLE_HOST"
-      value = "k8s.pynapple2.sandbox1.magellanbot.com"
+      value = "pynapple2.default.svc.cluster.local"
     }
   ]
   ec2_env_vars = [
     {
       name  = "DOWNSTREAM_PYNAPPLE_HOST"
-      value = "ec2.pynapple2.sandbox1.magellanbot.com"
+      value = module.pynapple2.load_balancer_dns_name
     }
   ]
 

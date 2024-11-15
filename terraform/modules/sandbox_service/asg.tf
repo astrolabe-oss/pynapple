@@ -4,13 +4,14 @@ locals {
 
 module "asg" {
   source = "terraform-aws-modules/autoscaling/aws"
+  count                   = var.enable_resources ? 1 : 0
 
   # Autoscaling group
   name = local.env_app_name
 
-  min_size                  = 1
-  max_size                  = 1
-  desired_capacity          = 1
+  min_size         = var.instance_count
+  max_size         = var.instance_count
+  desired_capacity = var.instance_count
   wait_for_capacity_timeout = 0
   health_check_type         = "ELB"
   vpc_zone_identifier       = var.public_subnets
@@ -31,7 +32,7 @@ module "asg" {
   # Traffic source attachment
   traffic_source_attachments = {
     ex-alb = {
-      traffic_source_identifier = module.alb.target_groups["asg"].arn
+      traffic_source_identifier = module.alb[0].target_groups["asg"].arn
       traffic_source_type       = "elbv2"
     }
   }
@@ -83,8 +84,8 @@ module "asg" {
     app_user    = var.app_name,
     app_user_pw = aws_secretsmanager_secret_version.application_db_user_pass.secret_string,
     db_admin    = local.db_admin,
-    db_admin_pw = jsondecode(data.aws_secretsmanager_secret_version.db_credentials.secret_string)["password"],
-    db_host     = module.rdbms.db_instance_address,
+    db_admin_pw = var.enable_resources ? jsondecode(data.aws_secretsmanager_secret_version.db_credentials[0].secret_string)["password"] : "",
+    db_host     = var.enable_resources ? module.rdbms[0].db_instance_address : "",
     db_name     = var.app_db_name
     })}
     SCRIPT
@@ -94,8 +95,8 @@ module "asg" {
     app_user    = var.app_name,
     app_user_pw = aws_secretsmanager_secret_version.application_db_user_pass.secret_string,
     db_admin    = local.db_admin,
-    db_admin_pw = jsondecode(data.aws_secretsmanager_secret_version.db_credentials.secret_string)["password"],
-    db_host     = module.rdbms.db_instance_address,
+    db_admin_pw = var.enable_resources ? jsondecode(data.aws_secretsmanager_secret_version.db_credentials[0].secret_string)["password"] : "",
+    db_host     = var.enable_resources ? module.rdbms[0].db_instance_address : "",
     db_name     = var.app_db_name
 })}
     SCRIPT
@@ -121,8 +122,8 @@ module "asg" {
     sudo su - ec2-user
     echo "SANDBOX_APP_NAME=${var.app_name}" >> /home/ec2-user/sandbox_app.env
     echo "SANDBOX_DATABASE_URI=${local.database_conn_str}" >> /home/ec2-user/sandbox_app.env
-    ${var.cache_engine == "redis" ? "echo \"SANDBOX_REDIS_HOST=${module.cache.cluster_cache_nodes[0].address}\" >> /home/ec2-user/sandbox_app.env" : ""}
-    ${var.cache_engine == "memcached" ? "echo \"SANDBOX_MEMCACHED_HOST=${module.cache.cluster_cache_nodes[0].address}:11211\" >> /home/ec2-user/sandbox_app.env" : ""}
+    ${var.cache_engine == "redis" ? "echo \"SANDBOX_REDIS_HOST=${module.cache[0].cluster_cache_nodes.address}\" >> /home/ec2-user/sandbox_app.env" : ""}
+    ${var.cache_engine == "memcached" ? "echo \"SANDBOX_MEMCACHED_HOST=${module.cache[0].cluster_cache_nodes.address}:11211\" >> /home/ec2-user/sandbox_app.env" : ""}
 
     ### CUSTOM ENV VARS ###
     ENV_VARS_JSON='${jsonencode([for ev in local.ec2_combined_env_vars : { name = ev.name, value = ev.value }])}'

@@ -14,7 +14,7 @@ resource "kubernetes_deployment" "this" {
     }
   }
   spec {
-    replicas = 2
+    replicas = var.enable_resources ? var.instance_count * 2 : 0
     selector {
       match_labels = {
         app = var.app_name
@@ -45,17 +45,18 @@ resource "kubernetes_deployment" "this" {
             }
           }
           dynamic "env" {
-            for_each = var.cache_engine == "redis" ? [1] : []
+            for_each = var.enable_resources && var.cache_engine == "redis" ? [1] : []
             content {
               name  = "SANDBOX_REDIS_HOST"
-              value = module.cache.cluster_cache_nodes[0].address
+              value = var.enable_resources ? module.cache[0].cluster_cache_nodes.address : ""
             }
           }
+
           dynamic "env" {
-            for_each = var.cache_engine == "memcached" ? [1] : []
+            for_each = var.enable_resources && var.cache_engine == "memcached" ? [1] : []
             content {
               name  = "SANDBOX_MEMCACHED_HOST"
-              value = "${module.cache.cluster_cache_nodes[0].address}:11211"
+              value = var.enable_resources ? "${module.cache[0].cluster_cache_nodes.address}:11211" : ""
             }
           }
           dynamic "env" {
@@ -73,6 +74,8 @@ resource "kubernetes_deployment" "this" {
 
 
 resource "kubernetes_service" "pynapple_lb" {
+  count = var.enable_resources ? 1 : 0
+
   metadata { name = "${local.env_app_name}-lb" }
   spec {
     selector = { app = var.app_name }

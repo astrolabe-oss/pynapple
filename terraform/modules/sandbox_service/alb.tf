@@ -1,5 +1,6 @@
 module "alb" {
   source = "terraform-aws-modules/alb/aws"
+  count                   = var.enable_resources ? 1 : 0
 
   name               = local.env_app_name
   load_balancer_type = "application"

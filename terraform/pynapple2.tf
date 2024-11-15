@@ -1,6 +1,10 @@
 module "pynapple2" {
   source = "./modules/sandbox_service"
 
+  # on/off
+  enable_resources = var.enable_resources
+  instance_count   = var.instance_count
+
   # app
   env_name = local.env_name
   app_name = "pynapple2"

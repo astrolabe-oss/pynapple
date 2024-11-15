@@ -9,7 +9,7 @@ module "eks" {
     instance_types = ["t4g.small"]
   }
 
-  eks_managed_node_groups = {
+  eks_managed_node_groups = var.enable_resources ? {
     "${local.env_name}_eks_ng1_arm" = {
       max_capacity  = 2
       min_capacity  = 1
@@ -18,7 +18,7 @@ module "eks" {
       ami_type      = "AL2_ARM_64"
       key_name      = aws_key_pair.infra_2024_1_30_1.key_name
     }
-  }
+  } : {}
 
   enable_cluster_creator_admin_permissions = true
 
