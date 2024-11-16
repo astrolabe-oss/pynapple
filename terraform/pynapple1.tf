@@ -26,7 +26,6 @@ module "pynapple1" {
   # components
   app_db_name        = "pynapple"
   database_engine    = "postgres"
-  db_init_s3_bucket = aws_s3_bucket.db_init.bucket
   cache_engine       = "redis"
 
   # runtime env vars

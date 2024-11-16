@@ -7,13 +7,6 @@ DB_HOST="${db_host}"
 DB_NAME="${db_name}"
 USER_NAME="${app_user}"
 USER_PASSWORD="${app_user_pw}"
-DB_INIT_S3_BUCKET="${db_init_s3_bucket}"
-
-# Check if database setup flag exists in S3
-if aws s3 ls "s3://$DB_INIT_S3_BUCKET/$DB_HOST" &>/dev/null; then
-    echo "Database setup flag found in S3. Exiting script."
-    exit 0
-fi
 
 # INSTALL MYSQL (not installed on Amazon Linux by default)
 if ! mysql --version &>/dev/null; then
@@ -45,10 +38,3 @@ else
     echo "Verification failed: User $USER_NAME cannot access the database $DB_NAME."
     exit 1
 fi
-
-# Create the flag in S3 to indicate the database has been set up
-TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-echo "Database setup completed at $TIMESTAMP" > /tmp/db_setup_flag
-aws s3 cp /tmp/db_setup_flag "s3://$DB_INIT_S3_BUCKET/$DB_HOST"
-rm /tmp/db_setup_flag
-echo "Database setup flag created in S3 with timestamp."

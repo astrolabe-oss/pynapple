@@ -27,7 +27,6 @@ module "pynapple2" {
   app_db_name        = "pynapple"
   database_engine    = "mysql"
   cache_engine       = "memcached"
-  db_init_s3_bucket = aws_s3_bucket.db_init.bucket
 
   # runtime env vars
   common_env_vars = [

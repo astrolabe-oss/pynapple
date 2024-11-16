@@ -57,8 +57,7 @@ module "asg" {
   }
   iam_role_policies = {
     AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
-    PynappleDeployBucket         = aws_iam_policy.deploy_bucket_read.arn,
-    PynappleDBInitBucket         = aws_iam_policy.db_init_bucket_rw.arn
+    PynappleDeployBucket         = aws_iam_policy.deploy_bucket_read.arn
   }
 
   network_interfaces = [
@@ -88,7 +87,6 @@ module "asg" {
     db_admin_pw       = var.enable_resources ? jsondecode(data.aws_secretsmanager_secret_version.db_credentials[0].secret_string)["password"] : "",
     db_host           = var.enable_resources ? module.rdbms[0].db_instance_address : "",
     db_name           = var.app_db_name
-    db_init_s3_bucket = var.db_init_s3_bucket
     })}
     SCRIPT
     chmod 700 db_init_postgres.sh
@@ -101,7 +99,6 @@ module "asg" {
     db_admin_pw       = var.enable_resources ? jsondecode(data.aws_secretsmanager_secret_version.db_credentials[0].secret_string)["password"] : "",
     db_host           = var.enable_resources ? module.rdbms[0].db_instance_address : "",
     db_name           = var.app_db_name
-    db_init_s3_bucket = var.db_init_s3_bucket
 })}
     SCRIPT
     chmod 700 db_init_mysql.sh
