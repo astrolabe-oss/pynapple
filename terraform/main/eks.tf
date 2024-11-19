@@ -30,12 +30,14 @@ module "eks" {
   tags = local.common_tags
 }
 
-# resource "null_resource" "install_metrics_server" {
-#   triggers = {
-#     always_run = false # timestamp()
-#   }
-#
-#   provisioner "local-exec" {
-#     command = "kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
-#   }
-# }
+resource "null_resource" "install_metrics_server" {
+  count           = var.enable_resources ? 1 : 0
+
+  triggers = {
+    always_run = false # timestamp()
+  }
+
+  provisioner "local-exec" {
+    command = "kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
+  }
+}

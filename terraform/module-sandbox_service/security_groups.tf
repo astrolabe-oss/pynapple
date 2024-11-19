@@ -1,4 +1,5 @@
 resource "aws_security_group" "alb_to_asg" {
+  count       = var.enable_resources ? 1 : 0
   name        = "${local.env_app_name}${" alb to asg"}"
   description = "Allow HTTP Traffic"
   vpc_id      = var.vpc_id

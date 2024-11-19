@@ -55,10 +55,6 @@ variable "security_group_ids" {
   type        = list(string)
 }
 
-variable "eks_node_security_group_id" {
-  description = "EKS Node Security Group Id - for allowing traffic to RDS"
-  type        = string
-}
 # components
 variable "common_env_vars" {
   description = "Environment variables for all app runtimes"

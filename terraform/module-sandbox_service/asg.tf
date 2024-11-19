@@ -67,7 +67,7 @@ module "asg" {
       device_index          = 0
       security_groups = concat(var.security_group_ids, [
         aws_security_group.instances_default.id,
-        aws_security_group.alb_to_asg.id
+        aws_security_group.alb_to_asg[0].id
       ])
       associate_public_ip_address = true
     }
@@ -84,8 +84,8 @@ module "asg" {
     app_user          = var.app_name,
     app_user_pw       = aws_secretsmanager_secret_version.application_db_user_pass.secret_string,
     db_admin          = local.db_admin,
-    db_admin_pw       = var.enable_resources ? jsondecode(data.aws_secretsmanager_secret_version.db_credentials[0].secret_string)["password"] : "",
-    db_host           = var.enable_resources ? module.rdbms[0].db_instance_address : "",
+    db_admin_pw       = jsondecode(data.aws_secretsmanager_secret_version.db_admin_credentials[0].secret_string)["password"],
+    db_host           = module.rdbms[0].db_instance_address,
     db_name           = var.app_db_name
     })}
     SCRIPT
@@ -96,8 +96,8 @@ module "asg" {
     app_user          = var.app_name,
     app_user_pw       = aws_secretsmanager_secret_version.application_db_user_pass.secret_string,
     db_admin          = local.db_admin,
-    db_admin_pw       = var.enable_resources ? jsondecode(data.aws_secretsmanager_secret_version.db_credentials[0].secret_string)["password"] : "",
-    db_host           = var.enable_resources ? module.rdbms[0].db_instance_address : "",
+    db_admin_pw       = jsondecode(data.aws_secretsmanager_secret_version.db_admin_credentials[0].secret_string)["password"],
+    db_host           = module.rdbms[0].db_instance_address,
     db_name           = var.app_db_name
 })}
     SCRIPT

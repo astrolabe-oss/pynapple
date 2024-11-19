@@ -3,6 +3,8 @@ locals {
 }
 
 resource "kubernetes_deployment" "this" {
+  count = var.enable_resources ? 1 : 0
+
   depends_on = [
     kubernetes_secret.db_secret,
     module.asg # this is because during first apply, we need the ASG to come up to run db init scripts...
@@ -89,6 +91,8 @@ resource "kubernetes_service" "pynapple_lb" {
 }
 
 resource "kubernetes_secret" "db_secret" {
+  count = var.enable_resources ? 1 : 0
+
   metadata {
     name = "${var.app_name}-env"
   }

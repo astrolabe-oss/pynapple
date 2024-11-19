@@ -12,7 +12,7 @@ locals {
 }
 
 module "rdbms" {
-  source = "terraform-aws-modules/rds/aws"
+  source                  = "terraform-aws-modules/rds/aws"
   count                   = var.enable_resources ? 1 : 0
 
   identifier = "${local.env_app_name}-db"
