@@ -1,5 +1,7 @@
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
+  count           = var.enable_resources ? 1 : 0
+
   cluster_name    = "${local.env_name}-eks"
   cluster_version = "1.31"
   subnet_ids      = module.vpc.public_subnets
@@ -16,14 +18,14 @@ module "eks" {
       capacity_type = "SPOT"
       instance_type = "t4g.small"
       ami_type      = "AL2_ARM_64"
-      key_name      = aws_key_pair.infra_2024_1_30_1.key_name
+      key_name      = var.key_pair_name
     }
   } : {}
 
   enable_cluster_creator_admin_permissions = true
 
   cluster_endpoint_public_access       = true
-  cluster_endpoint_public_access_cidrs = local.ip_addresses_devs
+  cluster_endpoint_public_access_cidrs = var.developer_ip_cidrs
 
   tags = local.common_tags
 }
