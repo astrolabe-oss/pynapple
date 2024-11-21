@@ -1,4 +1,4 @@
-## Uncomment and customize for your usage
+# Uncomment and customize for your usage
 # terraform {
 #   backend "s3" {
 #     bucket         = "astrolabe-tfstate"

@@ -4,8 +4,8 @@
 INCLUDED_FILES="pynapple/*.py pynapple/requirements.txt deploy"
 TARBALL_NAME="backup_$(date +%Y%m%d_%H%M%S).tar.gz"
 LATEST_TARBALL_NAME="deploy_latest.tar.gz"
-S3_BUCKET1="s3://guruai-sandbox1-pynapple1-deploy"
-S3_BUCKET2="s3://guruai-sandbox1-pynapple2-deploy"
+S3_BUCKET1="s3://astrolabe-sandbox1-pynapple1-deploy"
+S3_BUCKET2="s3://astrolabe-sandbox1-pynapple2-deploy"
 REFRESH_ASG_INSTANCES=false
 ASG_NAME1="sandbox1-pynapple1-2024033120142773680000000c"
 ASG_NAME2="sandbox1-pynapple2-20240403223052785000000003"

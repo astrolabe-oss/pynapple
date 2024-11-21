@@ -1,6 +1,6 @@
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
-  count           = var.enable_resources ? 1 : 0
+  count           = var.deploy_infra ? 1 : 0
 
   cluster_name    = "${local.env_name}-eks"
   cluster_version = "1.31"
@@ -11,7 +11,7 @@ module "eks" {
     instance_types = ["t4g.small"]
   }
 
-  eks_managed_node_groups = var.enable_resources ? {
+  eks_managed_node_groups = var.deploy_infra ? {
     "${local.env_name}_eks_ng1_arm" = {
       max_capacity  = 2
       min_capacity  = 1
@@ -30,14 +30,14 @@ module "eks" {
   tags = local.common_tags
 }
 
-resource "null_resource" "install_metrics_server" {
-  count           = var.enable_resources ? 1 : 0
-
-  triggers = {
-    always_run = false # timestamp()
-  }
-
-  provisioner "local-exec" {
-    command = "kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
-  }
-}
+# resource "null_resource" "install_metrics_server" {
+#   count           = var.deploy_infra ? 1 : 0
+#
+#   triggers = {
+#     always_run = false # timestamp()
+#   }
+#
+#   provisioner "local-exec" {
+#     command = "kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
+#   }
+# }

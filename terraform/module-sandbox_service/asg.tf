@@ -4,14 +4,14 @@ locals {
 
 module "asg" {
   source = "terraform-aws-modules/autoscaling/aws"
-  count                   = var.enable_resources ? 1 : 0
+  count                   = var.deploy_app ? 1 : 0
 
   # Autoscaling group
   name = local.env_app_name
 
-  min_size         = var.instance_count
-  max_size         = var.instance_count
-  desired_capacity = var.instance_count
+  min_size         = 0
+  max_size         = 0
+  desired_capacity = 0
   wait_for_capacity_timeout = 0
   health_check_type         = "ELB"
   vpc_zone_identifier       = var.public_subnets

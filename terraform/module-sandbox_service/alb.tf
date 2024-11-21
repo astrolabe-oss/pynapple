@@ -1,11 +1,12 @@
 module "alb" {
   source = "terraform-aws-modules/alb/aws"
-  count                   = var.enable_resources ? 1 : 0
+  count                   = var.deploy_app ? 1 : 0
 
-  name               = local.env_app_name
-  load_balancer_type = "application"
-  vpc_id             = var.vpc_id
-  subnets            = var.public_subnets
+  name                       = local.env_app_name
+  load_balancer_type         = "application"
+  vpc_id                     = var.vpc_id
+  subnets                    = var.public_subnets
+  enable_deletion_protection = false
 
   # Security Group
   security_group_ingress_rules = {

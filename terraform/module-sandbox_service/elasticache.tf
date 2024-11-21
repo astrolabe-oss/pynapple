@@ -12,7 +12,7 @@ locals {
 
 module "cache" {
   source = "terraform-aws-modules/elasticache/aws"
-  count                   = var.enable_resources ? 1 : 0
+  count                   = var.deploy_app ? 1 : 0
 
   cluster_id               = "${local.env_app_name}-cache"
   create_cluster           = true

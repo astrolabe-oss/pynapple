@@ -1,9 +1,9 @@
 module "pynapple1" {
+  count  = var.deploy_infra ? 1 : 0
   source = "../module-sandbox_service"
 
   # on/off
-  enable_resources = var.enable_resources
-  instance_count   = var.instance_count
+  deploy_app   = var.deploy_app
 
   # app
   env_name = local.env_name
@@ -43,7 +43,7 @@ module "pynapple1" {
   ec2_env_vars = [
     {
       name  = "DOWNSTREAM_PYNAPPLE_HOST"
-      value = module.pynapple2.load_balancer_dns_name
+      value = module.pynapple2[0].load_balancer_dns_name
     }
   ]
 

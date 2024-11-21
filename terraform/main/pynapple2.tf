@@ -1,9 +1,9 @@
 module "pynapple2" {
+  count  = var.deploy_infra ? 1 : 0
   source = "../module-sandbox_service"
 
   # on/off
-  enable_resources = var.enable_resources
-  instance_count   = var.instance_count
+  deploy_app   = var.deploy_app
 
   # app
   env_name = local.env_name

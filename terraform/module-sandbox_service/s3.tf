@@ -46,9 +46,9 @@
 ##############################
 resource "aws_s3_bucket" "deploy" {
   bucket = "${local.astrolabe_name}-${local.env_app_name}-deploy"
-  lifecycle {
-    prevent_destroy = "true"
-  }
+#   lifecycle {
+#     prevent_destroy = "true"
+#   }
 }
 
 resource "aws_s3_bucket_versioning" "versioning_example" {

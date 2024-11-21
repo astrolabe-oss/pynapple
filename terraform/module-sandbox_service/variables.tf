@@ -98,14 +98,8 @@ variable "app_db_name" {
   type        = string
 }
 
-variable "enable_resources" {
-  description = "Enable or disable all EC2, RDS, cache instances, and pods."
+variable "deploy_app" {
+  description = "Deploy app? Otherwise just create the basic resources (ECR, IAM, S3, mainly...)"
   type        = bool
-  default     = true
-}
-
-variable "instance_count" {
-  description = "Default instance count for all EC2, RDS, and pods."
-  type        = number
-  default     = 1
+  default     = false
 }

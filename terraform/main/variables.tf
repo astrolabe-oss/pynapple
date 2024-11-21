@@ -1,19 +1,19 @@
-variable "enable_resources" {
-  description = "Enable or disable all EC2, RDS, cache instances, and pods."
+variable "deploy_infra" {
+  description = "Deploy EKS, etc..."
   type        = bool
   default     = true
 }
 
-variable "instance_count" {
-  description = "Default instance count for all EC2, RDS, and pods."
-  type        = number
-  default     = 1
+variable "deploy_app" {
+  description = "Deploy app (LBs, ASGs, Pods Services, etc)"
+  type        = bool
+  default     = false
 }
 
 variable "key_pair_name" {
   description = "AWS EC2 Key Pair to be used with EC2 Instances"
   type        = string
-  default     = "astrolabe"
+  default     = "pynapple_key_pair"
 }
 
 variable "developer_ip_cidrs" {
@@ -25,5 +25,10 @@ variable "developer_ip_cidrs" {
 variable "aws_account_id" {
   description = "The AWS Account we want to restrict usage too"
   type        = string
-  default     = "112795234683"
+}
+
+variable "aws_profile" {
+  description = "The AWS Profile to use for configuring AWS provider"
+  type        = string
+  default     = "default"
 }

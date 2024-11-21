@@ -1,5 +1,5 @@
 resource "aws_security_group" "alb_to_asg" {
-  count       = var.enable_resources ? 1 : 0
+  count       = var.deploy_app ? 1 : 0
   name        = "${local.env_app_name}${" alb to asg"}"
   description = "Allow HTTP Traffic"
   vpc_id      = var.vpc_id
@@ -8,7 +8,7 @@ resource "aws_security_group" "alb_to_asg" {
     from_port       = 80
     to_port         = 80
     protocol        = "tcp"
-    security_groups = var.enable_resources ? [module.alb[0].security_group_id] : []
+    security_groups = var.deploy_app ? [module.alb[0].security_group_id] : []
   }
 }
 
