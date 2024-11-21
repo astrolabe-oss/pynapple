@@ -44,11 +44,14 @@
 ##############################
 ### PYNAPPLE DEPLOY BUCKET ###
 ##############################
+resource "random_string" "deploy_bucket_suffix" {
+  length  = 6
+  special = false
+  upper   = false
+}
+
 resource "aws_s3_bucket" "deploy" {
-  bucket = "${local.astrolabe_name}-${local.env_app_name}-deploy"
-#   lifecycle {
-#     prevent_destroy = "true"
-#   }
+  bucket = "${local.astrolabe_name}-${local.env_app_name}-deploy-${random_string.deploy_bucket_suffix.result}"
 }
 
 resource "aws_s3_bucket_versioning" "versioning_example" {

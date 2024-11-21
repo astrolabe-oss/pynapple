@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash -ex
 RESTART_DEPLOYMENTS=false
 
 # Parse command-line options
