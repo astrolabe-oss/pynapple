@@ -9,9 +9,9 @@ module "asg" {
   # Autoscaling group
   name = local.env_app_name
 
-  min_size         = 0
-  max_size         = 0
-  desired_capacity = 0
+  min_size         = 1
+  max_size         = 1
+  desired_capacity = 1
   wait_for_capacity_timeout = 0
   health_check_type         = "ELB"
   vpc_zone_identifier       = var.public_subnets
