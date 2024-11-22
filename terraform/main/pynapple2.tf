@@ -1,5 +1,5 @@
 module "pynapple2" {
-  count  = var.deploy_infra ? 1 : 0
+  count  = 1
   source = "../module-sandbox_service"
 
   # on/off
