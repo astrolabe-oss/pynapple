@@ -6,4 +6,5 @@ locals {
     Environment = local.env_name
     App         = local.app_name
   }
+  pynapple2_coredns_host = "${module.pynapple2[0].k8s_service_name}.${module.pynapple2[0].k8s_service_namespace}.svc.cluster.local"
 }

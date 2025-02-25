@@ -9,14 +9,17 @@ logger = logging.getLogger(__name__)
 def poll_downstream_pynapples():
     dph = config.Config.DOWNSTREAM_PYNAPPLE_HOST
     if dph:
-        logger.info(f"Pynapple configured to poll downstream pynapple!: `{dph}`")
-        threading.Thread(target=_poll_downstream_pynapples, daemon=True).start()
+        hosts = [host.strip() for host in dph.split(',')]
+        logger.info(f"Pynapple configured to poll {len(hosts)} downstream pynapple(s): {hosts}")
+        for host in hosts:
+            logger.info(f"Starting polling thread for downstream pynapple: `{host}`")
+            threading.Thread(target=_poll_downstream_pynapples, args=(host,), daemon=True).start()
     else:
         logger.info("Pynapple not configured to poll any downstream pynapples... womp womp :(")
 
 
-def _poll_downstream_pynapples():
-    ds_uri = f"http://{config.Config.DOWNSTREAM_PYNAPPLE_HOST}/pynapples"
+def _poll_downstream_pynapples(host):
+    ds_uri = f"http://{host}/pynapples"
     while True:
         try:
             logger.info(f"Polling {ds_uri}...")

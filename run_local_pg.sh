@@ -15,10 +15,10 @@ else
     echo "PostgreSQL service is already running."
 fi
 
-if ! psql postgres -tAc "SELECT 1 FROM pg_database WHERE datname='pynapple'" | grep -q 1; then
-  psql -U postgres -c "CREATE DATABASE pynapple;"
-  psql -U postgres -c "CREATE USER pynapple WITH PASSWORD 'ripe';"
-  psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE pynapple TO pynapple;"
+if ! psql -U $(whoami) -tAc "SELECT 1 FROM pg_database WHERE datname='pynapple'" | grep -q 1; then
+  psql -U $(whoami) -c "CREATE DATABASE pynapple;"
+  psql -U $(whoami) -c "CREATE USER pynapple WITH PASSWORD 'ripe';"
+  psql -U $(whoami) -c "GRANT ALL PRIVILEGES ON DATABASE pynapple TO pynapple;"
 else
   echo "Schema already setup"
 fi
@@ -49,7 +49,8 @@ echo "Redis setup is complete."
 ### PYNAPPLE SETUP ###
 ######################
 cd pynapple
-if [ ! -d "venv" ]; then
+VENV_DIR=venv
+if [ ! -d "$VENV_DIR" ]; then
     echo "Creating virtual environment..."
     python -m venv $VENV_DIR
 else

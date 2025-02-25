@@ -37,7 +37,7 @@ module "pynapple1" {
   k8s_env_vars = [
     {
       name  = "DOWNSTREAM_PYNAPPLE_HOST"
-      value = "pynapple2.default.svc.cluster.local"
+      value = local.pynapple2_coredns_host
     }
   ]
   ec2_env_vars = [

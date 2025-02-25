@@ -27,3 +27,13 @@ output "ecr_repo_arn" {
   description = "ECR Repository"
   value       = aws_ecr_repository.this.repository_url
 }
+
+output "k8s_service_name" {
+  description = "k8s service name"
+  value       = var.deploy_app ? kubernetes_service.pynapple_lb[0].metadata[0].name : ""
+}
+
+output "k8s_service_namespace" {
+  description = "k8s service namespace"
+  value       = var.deploy_app ? kubernetes_service.pynapple_lb[0].metadata[0].namespace : ""
+}
