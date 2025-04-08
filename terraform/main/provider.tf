@@ -1,7 +1,7 @@
 provider "aws" {
   region              = "us-east-1"
   allowed_account_ids = [var.aws_account_id]
-  profile             = var.aws_profile
+#   profile             = var.aws_profile
 }
 
 provider "kubernetes" {

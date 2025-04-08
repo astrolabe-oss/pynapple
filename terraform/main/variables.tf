@@ -27,8 +27,8 @@ variable "aws_account_id" {
   type        = string
 }
 
-variable "aws_profile" {
-  description = "The AWS Profile to use for configuring AWS provider"
-  type        = string
-  default     = "default"
-}
+# variable "aws_profile" {
+#   description = "The AWS Profile to use for configuring AWS provider"
+#   type        = string
+#   default     = "default"
+# }
