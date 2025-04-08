@@ -41,5 +41,5 @@ module "cache" {
   transit_encryption_enabled = false
 
   # Tags
-  tags = var.common_tags
+  tags = local.common_tags
 }

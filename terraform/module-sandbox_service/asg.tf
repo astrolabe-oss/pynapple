@@ -148,5 +148,5 @@ module "asg" {
   EOF
 )
 
-tags = var.common_tags
+tags = local.common_tags
 }

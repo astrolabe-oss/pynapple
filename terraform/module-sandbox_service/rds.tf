@@ -41,5 +41,5 @@ module "rdbms" {
   create_db_parameter_group = false
   create_db_option_group    = false
 
-  tags = var.common_tags
+  tags = local.common_tags
 }
